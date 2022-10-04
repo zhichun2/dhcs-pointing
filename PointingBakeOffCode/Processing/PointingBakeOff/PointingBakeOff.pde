@@ -16,7 +16,7 @@ int startTime = 0; // time starts when the first click is captured
 int finishTime = 0; //records the time of the final click
 int hits = 0; //number of successful clicks
 int misses = 0; //number of missed clicks
-Robot robot; //initialized in setup 
+Robot robot; //initialized in setup
 
 int numRepeats = 1; //sets the number of times each button repeats in the test
 
@@ -33,7 +33,7 @@ void setup()
 
   try {
     robot = new Robot(); //create a "Java Robot" class that can move the system cursor
-  } 
+  }
   catch (AWTException e) {
     e.printStackTrace();
   }
@@ -47,7 +47,7 @@ void setup()
 
   Collections.shuffle(trials); // randomize the order of the buttons
   System.out.println("trial order: " + trials);
-  
+
   surface.setLocation(0,0);// put window in top left corner of screen (doesn't always work)
 }
 
@@ -62,7 +62,7 @@ void draw()
     float penalty = constrain(((95f-((float)hits*100f/(float)(hits+misses)))*.2f),0,100);
     fill(255); //set fill color to white
     //write to screen (not console)
-    text("Finished!", width / 2, height / 2); 
+    text("Finished!", width / 2, height / 2);
     text("Hits: " + hits, width / 2, height / 2 + 20);
     text("Misses: " + misses, width / 2, height / 2 + 40);
     text("Accuracy: " + (float)hits*100f/(float)(hits+misses) +"%", width / 2, height / 2 + 60);
@@ -78,8 +78,21 @@ void draw()
   for (int i = 0; i < 16; i++)// for all button
     drawButton(i); //draw button
 
-  fill(255, 0, 0, 200); // set fill color to translucent red
-  ellipse(mouseX, mouseY, 20, 20); //draw user cursor as a circle with a diameter of 20
+  //fill(255, 0, 0, 200); // set fill color to translucent red
+  //ellipse(mouseX, mouseY, 20, 20); //draw user cursor as a circle with a diameter of 20
+
+  Rectangle bounds = getButtonLocation(trials.get(trialNum));
+  if ((mouseX > bounds.x && mouseX < bounds.x + bounds.width) && (mouseY > bounds.y && mouseY < bounds.y + bounds.height)) {
+    stroke(0, 255, 0, 200);
+  } else {
+    stroke(255, 0, 0, 200);
+  }
+  strokeWeight(3);
+  line(mouseX - 15, mouseY, mouseX + 15, mouseY);
+  line(mouseX, mouseY - 15, mouseX, mouseY + 15);
+  //restore default
+  stroke(0);
+  strokeWeight(1);
 }
 
 void mousePressed() // test to see if hit was in target!
@@ -99,12 +112,12 @@ void mousePressed() // test to see if hit was in target!
 
   Rectangle bounds = getButtonLocation(trials.get(trialNum));
 
- //check to see if mouse cursor is inside button 
+ //check to see if mouse cursor is inside button
   if ((mouseX > bounds.x && mouseX < bounds.x + bounds.width) && (mouseY > bounds.y && mouseY < bounds.y + bounds.height)) // test to see if hit was within bounds
   {
     System.out.println("HIT! " + trialNum + " " + (millis() - startTime)); // success
-    hits++; 
-  } 
+    hits++;
+  }
   else
   {
     System.out.println("MISSED! " + trialNum + " " + (millis() - startTime)); // fail
@@ -115,7 +128,7 @@ void mousePressed() // test to see if hit was in target!
 
   //in this example code, we move the mouse back to the middle
   //robot.mouseMove(width/2, (height)/2); //on click, move cursor to roughly center of window!
-}  
+}
 
 //probably shouldn't have to edit this method
 Rectangle getButtonLocation(int i) //for a given button ID, what is its location and size
@@ -131,17 +144,24 @@ void drawButton(int i)
   Rectangle bounds = getButtonLocation(i);
 
   if (trials.get(trialNum) == i) // see if current button is the target
-    fill(0, 255, 255); // if so, fill cyan
+    //fill(0, 255, 255); // if so, fill cyan
+    fill(200);
   else
-    fill(200); // if not, fill gray
+    //fill(100); // if not, fill gray
+    fill(50);
 
   rect(bounds.x, bounds.y, bounds.width, bounds.height); //draw button
+
+  if ((mouseX > bounds.x && mouseX < bounds.x + bounds.width) && (mouseY > bounds.y && mouseY < bounds.y + bounds.height)) {
+    line(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
+    line(bounds.x + bounds.width, bounds.y, bounds.x, bounds.y + bounds.height);
+  }
 }
 
 void mouseMoved()
 {
-   //can do stuff everytime the mouse is moved (i.e., not clicked)
-   //https://processing.org/reference/mouseMoved_.html
+  //can do stuff everytime the mouse is moved (i.e., not clicked)
+  //https://processing.org/reference/mouseMoved_.html
 }
 
 void mouseDragged()
@@ -150,7 +170,7 @@ void mouseDragged()
   //https://processing.org/reference/mouseDragged_.html
 }
 
-void keyPressed() 
+void keyPressed()
 {
   //can use the keyboard if you wish
   //https://processing.org/reference/keyTyped_.html
