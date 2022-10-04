@@ -145,12 +145,11 @@ void drawButton(int i)
 
   if (trials.get(trialNum) == i) // see if current button is the target
     //fill(0, 255, 255); // if so, fill cyan
-    fill(200);
+    fill(75, 250, 75);
   else if (trialNum < trials.size() - 1 && trials.get(trialNum + 1) == i)
-    fill(80); // one-step lookahead
+    fill(175, 225, 175); // one-step lookahead
   else
-    //fill(100); // if not, fill gray
-    fill(50);
+    fill(200); // if not, fill gray
 
   rect(bounds.x, bounds.y, bounds.width, bounds.height); //draw button
 
